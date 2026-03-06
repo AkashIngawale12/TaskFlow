@@ -1,0 +1,49 @@
+---
+description: One type (class/struct/enum) per Swift file; filename matches type name
+globs: "**/*.swift"
+alwaysApply: false
+---
+
+# One Type Per File (Swift)
+
+Each **class**, **struct**, or **enum** must live in its **own file**. The filename must match the primary type name.
+
+## Rules
+
+- **One primary type per file.** The file is named after that type (e.g. `TaskRowView` → `TaskRowView.swift`).
+- **Small helpers** (e.g. private structs used only in one place) may stay in the same file only if they are tightly coupled and under ~20 lines. Prefer extracting to a separate file when in doubt.
+- **Protocol conformance extensions** can stay in the same file as the type they extend, or in a dedicated `Type+Protocol.swift` file.
+
+## Examples
+
+### ❌ Avoid: multiple top-level types in one view file
+
+```swift
+// TaskListView.swift – BAD: contains TaskListView, TaskRowView, FilterChip
+struct TaskListView: View { ... }
+struct TaskRowView: View { ... }
+struct FilterChip: View { ... }
+```
+
+### ✅ Prefer: one type per file
+
+```
+Views/
+  TaskListView.swift    → struct TaskListView only
+  TaskRowView.swift     → struct TaskRowView only
+  FilterChip.swift      → struct FilterChip only
+  HabitListView.swift  → struct HabitListView only
+  HabitRowView.swift    → struct HabitRowView only
+```
+
+### When adding a new type
+
+1. Create a new file named `TypeName.swift`.
+2. Put only that type (and any tiny, file-private helpers) in the file.
+3. Move any existing secondary types out of other files into their own files when you touch that code.
+
+## Rationale
+
+- Easier to find and navigate types.
+- Clearer ownership and fewer merge conflicts.
+- Aligns with Apple’s “one primary type per file” style and common Swift project layout.
