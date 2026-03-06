@@ -2,6 +2,8 @@
 
 **TaskFlow** is an iOS task and habit tracker built with **SwiftUI**, **MVVM**, and **SwiftData**. Single-user, offline-first—all data stays on the device.
 
+> **Built with Cursor AI only.** This project—from idea creation to the full codebase—was built entirely using Cursor AI; no manual coding was used. See [CURSOR_AI_BUILD.md](CURSOR_AI_BUILD.md) for the end-to-end workflow and prompts used so you can replicate the approach.
+
 ## Requirements
 
 - Xcode 15+
