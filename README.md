@@ -68,6 +68,16 @@
 - Dark-style cards, FAB for new task, filter chips, category badges
 - Follows Apple HIG; theme in `TaskFlowTheme`
 
+## 🔀 UI flow (high level)
+
+- **Tasks**: Filter chips + category menu → grouped list (Today → Overdue → Upcoming → Completed) → FAB **+** or tap row → Task Edit (Title, Notes, Due, Category, Priority, Reminder, Tags → Save/Delete).
+- **Habits**: List + **+** → Add/Edit habit (name, weekday picker, reminder); context menu Edit/Delete on rows.
+- **Insights**: Today cards, week summary, completed-per-day chart, by-category list.
+- **Categories**: List + **+** → Add/Edit (name, color, icon).
+- **Settings**: Appearance (System/Light/Dark), About.
+
+For a visual mockup of all screens, open [docs/TaskFlow_Mockup.html](docs/TaskFlow_Mockup.html) in a browser.
+
 ## 🏗 Project structure
 
 ```

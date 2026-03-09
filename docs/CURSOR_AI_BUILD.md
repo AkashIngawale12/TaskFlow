@@ -1,7 +1,7 @@
 # TaskFlow: Built 100% with Cursor AI
 
 **This entire iOS project—from idea creation to the full codebase—was built using Cursor AI only. No manual coding was used.**  
-The workflow below is the exact process used so others can replicate the approach.
+The workflow below is the exact process used so others can replicate it.
 
 ---
 
@@ -15,13 +15,31 @@ No code in this repository was written manually; all Swift, SwiftUI, SwiftData, 
 
 ---
 
-## End-to-End Workflow
+## End-to-End Workflow – TaskFlow POC
 
-### Step 1: Generate iOS app ideas
+Once Cursor is set up with **Docs**, **Rules**, **Skills**, and **MCP servers**, you can go from a rough idea to a runnable iOS app efficiently. Below is the workflow used to build a TaskFlow proof-of-concept, including the exact prompts so others can replicate it.
 
-**What we did:** Asked an AI to suggest 5–8 strong app ideas in a chosen category (e.g. task management), then picked one (TaskFlow).
+### Three-Phase Workflow
 
-**Prompt used:**
+| Phase | Purpose |
+|-------|---------|
+| **Phase 1** | Idea generation – explore app ideas in a category (optional if you already have an idea). |
+| **Phase 2** | Generate a Cursor build prompt – turn the idea into a structured, copy-pasteable prompt. |
+| **Phase 3** | Execution in Cursor – build, run, test, and optionally add a visual mockup. |
+
+---
+
+## Phase 1 – Idea Generation
+
+The first step is to explore possible app ideas within a specific category.
+
+**If you already have a clear app idea in mind**, you can skip this phase and move directly to Phase 2, where we generate the Cursor build prompt. This phase is mainly useful when you are looking for inspiration or evaluating multiple concepts before deciding what to build.
+
+Instead of starting with a fixed concept, we asked an AI to generate multiple iOS app ideas and then selected the most promising one.
+
+**What we did:** We asked the AI to suggest 5–8 strong mobile app ideas in a specific category. You can choose any category depending on what you want to build. In this case, we chose the **task management** category.
+
+**Prompt:**
 
 ```
 You are a senior iOS developer and architect
@@ -53,15 +71,20 @@ For each idea provide:
 Ensure ideas feel like real apps that could launch on the App Store.
 ```
 
-**Outcome:** Several options (e.g. TaskFlow, Recipe Vault, Expense Tracker). We chose **TaskFlow**.
+**Outcome:**  
+The AI suggested several ideas such as TaskFlow, Recipe Vault, Expense Tracker, and Habit Tracker. From these, we selected **TaskFlow**, a productivity app that combines tasks, categories, tags, habits, and insights in a single experience. This selected idea becomes the foundation for Phase 2, where we generate a structured Cursor prompt to build the app.
 
 ---
 
-### Step 2: Generate the Cursor prompt
+## Phase 2 – Generate a Cursor Build Prompt
 
-**What we did:** Used an AI tool (e.g. ChatGPT) to turn a short brief into a single, ready-to-use Cursor prompt so we didn’t write the long prompt manually.
+Once the app idea is selected, the next step is to convert that idea into a structured build prompt that Cursor can use to generate the application.
 
-**Prompt used:**
+Instead of manually writing a long and detailed prompt ourselves, we used AI again to generate a Cursor-ready prompt automatically. This prompt acts as a blueprint for the app, describing the features, architecture, UI structure, and technical requirements. This approach helps ensure the instructions given to Cursor are clear, structured, and comprehensive, which significantly improves the quality of the generated code.
+
+**What we did:** We asked the AI to generate a single, well-structured prompt that could be pasted directly into Cursor.
+
+**Prompt:**
 
 ```
 You are a senior iOS engineer. Generate a single, ready-to-use Cursor prompt that would instruct an AI to build an iOS app named TaskFlow using SwiftUI and MVVM. The generated prompt must be complete and copy-pasteable so that running it produces the full app.
@@ -94,15 +117,22 @@ Tab bar: Tasks | Habits | Insights | Categories | Settings. Specify: Home (task 
 Output Expectations - Provide Data Models, ViewModels, SwiftUI Views, unit tests, with comments. Structured for MVVM but expandable for future features.
 ```
 
-**Outcome:** The AI returned a full Cursor build prompt, which we copied into Cursor (and optionally refined once).
+**Outcome:**  
+The AI generated a detailed Cursor-ready prompt that acts as the full specification for the app. This prompt can now be copied directly into Cursor, which will use it to generate the project structure, data models, views, and initial UI implementation. With this structured prompt ready, we can move to Phase 3: building the app directly inside Cursor.
 
 ---
 
-### Step 3: Build TaskFlow in Cursor (full prompt)
+## Phase 3 – Execution Steps in Cursor
 
-**What we did:** Pasted the generated prompt into Cursor to create the app with all agreed features in one go. All code in this repo was produced by Cursor from this (or follow-up) prompts.
+This phase turns concepts into a working app. The following steps show the practical execution of that plan inside Cursor.
 
-**Prompt used (representative):**
+### Step 1 – Build the App in Cursor
+
+With the Cursor build prompt ready, the next step is to run it inside Cursor to generate the application.
+
+**What we did:** We pasted the Cursor prompt generated in Phase 2 into Cursor’s chat interface. Cursor then used the prompt to generate the initial implementation of the TaskFlow app, including the project structure, models, views, and supporting logic.
+
+**Full prompt (as generated in Phase 2) used in Cursor:**
 
 ```
 You are a senior iOS engineer specializing in SwiftUI and MVVM architecture.
@@ -205,14 +235,58 @@ Comments for non-obvious decisions
 Optional: HTML UI visualization file for stakeholders
 ```
 
-**Outcome:** Cursor generated the full app: project structure, models, list/detail/add screens, persistence, notifications, habits, insights, and the features above. Follow-up prompts were used only for polish or small fixes—no manual coding.
+**Outcome:**  
+Cursor generated a complete project skeleton with working screens and models, providing a strong starting point for further development.
+
+---
+
+### Step 2 – Build and Run the App
+
+Once Cursor generates the project code, the next step is to build and run the application to verify that everything compiles correctly.
+
+Normally, this would require switching to Xcode, but with **XcodeBuild MCP**, builds and tests can be executed directly from Cursor. The XcodeBuild MCP server connects Cursor to Apple’s command-line build tools (`xcodebuild`). This allows you to run builds, tests, and analysis commands while seeing the output directly inside the editor.
+
+**Example commands:**
+
+- `@xcodebuild build`
+- `@xcodebuild test --simulator`
+
+**Handling errors:**  
+If the build fails, MCP returns the compiler errors and warnings in the chat. Cursor can read those errors, suggest fixes, and you can run the build again. This creates a fast iteration loop: **Build → Error → Fix → Rebuild**.
+
+**Outcome:**  
+Using XcodeBuild MCP, we were able to build the project, inspect errors, apply fixes, and rebuild—all without leaving Cursor, reducing context switching during development.
+
+---
+
+### Step 3 – Test, Refine, and Enhance
+
+- Run the app on a simulator or device.
+- Verify features: tasks, habits, categories, tags, notifications, insights.
+- Identify missing features or UI polish (e.g. animations for task completion, other improvements).
+- Apply additional AI prompts to refine or add features, rebuild via MCP, and repeat.
+
+---
+
+### Optional: Visual Mockup
+
+Before or alongside building the iOS app, you can ask AI to generate a visual mockup of your app. This provides a concrete representation of screens, layouts, and flows without writing any code. It helps you and your team validate the design and user experience early, reducing the risk of expensive redesigns later.
+
+**Prompt:**
+
+```
+Explain general ideas of TaskFlow and provide a UI example to understand the flow. Generate an HTML mockup showing key screens: Task List, Task Detail/Edit, Habits, Insights, and Categories.
+```
+
+The resulting HTML file (e.g. `docs/TaskFlow_Mockup.html`) can be opened in a browser to walk through all main screens and flows.
 
 ---
 
 ## For Visitors of This Repository
 
 - **No manual code:** All Swift and project files were produced by Cursor AI from the prompts above (and minor follow-ups).
-- **Replicable:** You can use the same three steps (idea → meta-prompt for Cursor → paste into Cursor) to go from an idea to a runnable iOS app.
-- **Tooling:** Idea and meta-prompt steps can be done in any AI tool (e.g. ChatGPT); the actual build step was done entirely in **Cursor** with **XcodeBuild MCP** for build/run where applicable.
+- **Replicable:** You can use the same three phases (idea → meta-prompt for Cursor → paste into Cursor, then build/run/test) to go from an idea to a runnable iOS app.
+- **Tooling:** Phase 1 and Phase 2 can be done in any AI tool (e.g. ChatGPT); the actual build and run steps were done entirely in **Cursor** with **XcodeBuild MCP** for build/run where applicable.
+- **Setup:** For the smoothest experience, set up Cursor with Docs, Rules, Skills, and MCP servers (e.g. XcodeBuild) before starting Phase 3.
 
-If you want to try this workflow yourself, start with Step 1 for your category, then Step 2 to get a Cursor prompt, then Step 3 in Cursor to generate the app.
+If you want to try this workflow yourself, start with Phase 1 for your category (or skip to Phase 2 if you already have an app idea), then Phase 2 to get a Cursor prompt, then Phase 3 in Cursor to generate, build, and refine the app.

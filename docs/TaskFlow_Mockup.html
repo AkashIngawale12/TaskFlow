@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow – UI Mockup</title>
+  <style>
+    :root {
+      --bg: #1c1c1e;
+      --bg-secondary: #2c2c2e;
+      --bg-tertiary: #3a3a3c;
+      --label: #ffffff;
+      --label-secondary: #8e8e93;
+      --accent: #0a84ff;
+      --accent-rgb: 10, 132, 255;
+      --green: #34c759;
+      --red: #ff3b30;
+      --orange: #ff9f0a;
+      --purple: #af52de;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--label);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    /* Tab bar */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--bg-tertiary);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+    }
+    .tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      color: var(--label-secondary);
+      text-decoration: none;
+      font-size: 10px;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    .tab:hover, .tab.active { color: var(--accent); }
+    .tab svg { width: 24px; height: 24px; opacity: 0.9; }
+
+    /* Screen container */
+    .screen { display: none; padding: 16px 20px 24px; }
+    .screen.active { display: block; }
+
+    /* Nav title */
+    .nav-title {
+      font-size: 34px;
+      font-weight: 700;
+      margin: 8px 0 20px;
+      letter-spacing: 0.4px;
+    }
+
+    /* Filter chips */
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .chip {
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      white-space: nowrap;
+      background: var(--bg-secondary);
+      color: var(--label-secondary);
+      border: none;
+      cursor: pointer;
+    }
+    .chip.active { background: var(--accent); color: #fff; }
+
+    /* Section header */
+    .section-header {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--label-secondary);
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px;
+      text-transform: uppercase;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 4px;
+    }
+    .card-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .checkbox {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--label-secondary);
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .checkbox.done {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+      font-size: 12px;
+    }
+    .card-body { flex: 1; min-width: 0; }
+    .card-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin: 0 0 4px;
+    }
+    .card-title.done { color: var(--label-secondary); text-decoration: line-through; }
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--label-secondary);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .badge-work { background: rgba(var(--accent-rgb), 0.2); color: var(--accent); }
+    .badge-personal { background: rgba(48, 209, 88, 0.2); color: #30d158; }
+    .badge-health { background: rgba(255, 159, 10, 0.2); color: var(--orange); }
+    .overdue { color: var(--red); }
+
+    /* FAB */
+    .fab {
+      position: fixed;
+      bottom: 88px;
+      right: 36px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fab:hover { opacity: 0.95; }
+    .screen:not(#tasks-screen).active ~ .fab { display: none; }
+
+    /* Task Edit */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--accent);
+      font-size: 16px;
+      margin-bottom: 24px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .field {
+      margin-bottom: 20px;
+    }
+    .field-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--label-secondary);
+      margin-bottom: 4px;
+    }
+    .field-input {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border: none;
+      border-radius: 10px;
+      color: var(--label);
+      font-size: 16px;
+    }
+    .field-input::placeholder { color: var(--label-secondary); }
+    .segmented {
+      display: flex;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+    }
+    .segmented span {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 6px;
+      color: var(--label-secondary);
+    }
+    .segmented span.active { background: var(--bg-tertiary); color: var(--label); }
+    .btn-row { display: flex; gap: 12px; margin-top: 32px; }
+    .btn {
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-danger { background: rgba(255, 59, 48, 0.2); color: var(--red); }
+
+    /* Habits */
+    .habit-card .repeat { font-size: 12px; color: var(--label-secondary); }
+    .habit-card .streak { font-size: 12px; color: var(--label-secondary); }
+    .toolbar-right { text-align: right; margin-bottom: 8px; }
+    .toolbar-right button {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Insights */
+    .summary-row { display: flex; gap: 12px; margin-bottom: 12px; }
+    .summary-card {
+      flex: 1;
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .summary-card .value { font-size: 22px; font-weight: 700; }
+    .summary-card .value.accent { color: var(--accent); }
+    .summary-card .value.red { color: var(--red); }
+    .summary-card .label { font-size: 12px; color: var(--label-secondary); margin-top: 4px; }
+    .chart-placeholder {
+      height: 180px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--label-secondary);
+      font-size: 14px;
+      margin: 8px 0;
+    }
+    .category-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      margin-bottom: 4px;
+    }
+    .category-row .name { font-weight: 500; }
+    .category-row .stats { color: var(--label-secondary); font-size: 14px; }
+    .category-row .pct { color: var(--accent); font-weight: 500; min-width: 36px; text-align: right; }
+
+    /* Categories tab */
+    .cat-list-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--bg-tertiary);
+    }
+    .cat-list-item .icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .cat-list-item .edit { margin-left: auto; color: var(--accent); font-size: 14px; cursor: pointer; }
+    .color-dots {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 8px 0;
+    }
+    .color-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+    }
+    .color-dot.selected { border-color: #fff; }
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 44px);
+      gap: 12px;
+      margin: 8px 0;
+    }
+    .icon-cell {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--label-secondary);
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .icon-cell.selected { color: var(--accent); }
+
+    /* Settings */
+    .settings-group {
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--bg-tertiary);
+    }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-row .check { color: var(--accent); font-size: 18px; }
+    .about-text {
+      font-size: 13px;
+      color: var(--label-secondary);
+      margin-top: 12px;
+      line-height: 1.4;
+    }
+
+    /* Tags */
+    .tag-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+    .tag-chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      background: var(--bg-tertiary);
+      color: var(--label);
+      border: none;
+      cursor: pointer;
+    }
+    .tag-chip.selected { background: rgba(var(--accent-rgb), 0.2); color: var(--accent); }
+    .add-tag { color: var(--accent); font-size: 14px; cursor: pointer; margin-top: 8px; }
+
+    /* Weekday picker */
+    .weekday-picker { display: flex; gap: 8px; margin: 8px 0; }
+    .weekday-picker span {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--bg-tertiary);
+      color: var(--label-secondary);
+      cursor: pointer;
+    }
+    .weekday-picker span.selected { background: var(--accent); color: #fff; }
+
+    /* Sub-screen (sheet) */
+    .sub-screen { display: none; padding: 20px; }
+    .sub-screen.active { display: block; }
+    .sub-screen .nav-title { font-size: 20px; margin-top: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Tab content -->
+  <div id="tasks-screen" class="screen active">
+    <h1 class="nav-title">Tasks</h1>
+    <div class="filter-chips">
+      <button class="chip">All</button>
+      <button class="chip active">Today</button>
+      <button class="chip">Overdue</button>
+      <button class="chip">Completed</button>
+    </div>
+    <p class="section-header">Today</p>
+    <div class="card" style="cursor: pointer;" onclick="showScreen('task-edit-screen')" title="Tap to edit">
+      <div class="card-row">
+        <div class="checkbox"></div>
+        <div class="card-body">
+          <p class="card-title">Review pull request</p>
+          <div class="card-meta">
+            <span class="badge badge-work">Work</span>
+            <span>#urgent</span>
+            <span>Mar 9, 2:00 PM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-row">
+        <div class="checkbox"></div>
+        <div class="card-body">
+          <p class="card-title">Gym</p>
+          <div class="card-meta">
+            <span class="badge badge-health">Health</span>
+            <span>Mar 9, 6:00 PM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="section-header">Overdue</p>
+    <div class="card">
+      <div class="card-row">
+        <div class="checkbox"></div>
+        <div class="card-body">
+          <p class="card-title">Submit report</p>
+          <div class="card-meta">
+            <span class="badge badge-work">Work</span>
+            <span class="overdue">Overdue</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="section-header">Completed</p>
+    <div class="card">
+      <div class="card-row">
+        <div class="checkbox done">✓</div>
+        <div class="card-body">
+          <p class="card-title done">Buy groceries</p>
+          <div class="card-meta">
+            <span class="badge badge-personal">Personal</span>
+            <span>Completed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="task-edit-screen" class="screen">
+    <a class="back-link" href="#" onclick="showScreen('tasks-screen'); return false;">← Back to list</a>
+    <h2 class="nav-title" style="font-size: 22px;">Edit Task</h2>
+    <div class="field">
+      <div class="field-label">Title</div>
+      <input type="text" class="field-input" value="Review pull request" placeholder="Title" />
+    </div>
+    <div class="field">
+      <div class="field-label">Notes</div>
+      <input type="text" class="field-input" placeholder="Notes" />
+    </div>
+    <div class="field">
+      <div class="field-label">Set due date</div>
+      <input type="datetime-local" class="field-input" />
+    </div>
+    <div class="field">
+      <div class="field-label">Category</div>
+      <select class="field-input">
+        <option>Work</option>
+        <option>Personal</option>
+        <option>Health</option>
+      </select>
+    </div>
+    <div class="field">
+      <div class="field-label">Priority</div>
+      <div class="segmented">
+        <span>Low</span>
+        <span class="active">Medium</span>
+        <span>High</span>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Reminder</div>
+      <select class="field-input">
+        <option>None</option>
+        <option>At due time</option>
+        <option>5 min before</option>
+        <option>15 min before</option>
+        <option>30 min before</option>
+        <option>1 hour before</option>
+      </select>
+    </div>
+    <div class="field">
+      <div class="field-label">Tags</div>
+      <div class="tag-chips">
+        <button class="tag-chip selected">urgent</button>
+        <button class="tag-chip">waiting</button>
+        <button class="tag-chip">follow-up</button>
+      </div>
+      <div class="add-tag">+ Add tag</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary">Save</button>
+      <button class="btn btn-danger">Delete</button>
+    </div>
+  </div>
+
+  <div id="habits-screen" class="screen">
+    <h1 class="nav-title">Habits</h1>
+    <div class="toolbar-right">
+      <button title="Add habit">➕</button>
+    </div>
+    <p class="section-header">Today</p>
+    <div class="card habit-card">
+      <div class="card-row">
+        <div class="checkbox done">✓</div>
+        <div class="card-body">
+          <p class="card-title">Exercise</p>
+          <div class="repeat">Every day</div>
+          <div class="streak">• 7 day streak</div>
+        </div>
+      </div>
+    </div>
+    <div class="card habit-card">
+      <div class="card-row">
+        <div class="checkbox"></div>
+        <div class="card-body">
+          <p class="card-title">Read 20 min</p>
+          <div class="repeat">Mon, Wed, Fri</div>
+          <div class="streak">• 3 day streak</div>
+        </div>
+      </div>
+    </div>
+    <div class="card habit-card">
+      <div class="card-row">
+        <div class="checkbox"></div>
+        <div class="card-body">
+          <p class="card-title">Meditate</p>
+          <div class="repeat">Every day</div>
+          <div class="streak">Not scheduled today</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="add-habit-screen" class="screen">
+    <h2 class="nav-title" style="font-size: 22px;">New Habit</h2>
+    <div class="field">
+      <div class="field-label">Name</div>
+      <input type="text" class="field-input" placeholder="Habit name" />
+    </div>
+    <div class="field">
+      <div class="field-label">Repeat on</div>
+      <div class="weekday-picker">
+        <span class="selected">S</span><span class="selected">M</span><span class="selected">T</span><span class="selected">W</span><span class="selected">T</span><span class="selected">F</span><span class="selected">S</span>
+      </div>
+      <div class="field-label" style="margin-top: 4px;">Leave all selected for every day.</div>
+    </div>
+    <div class="field">
+      <div class="field-label">Reminder</div>
+      <label style="display: flex; align-items: center; gap: 8px;">
+        <input type="checkbox" /> Remind me
+      </label>
+      <input type="time" class="field-input" value="09:00" style="margin-top: 8px;" />
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary">Add</button>
+    </div>
+  </div>
+
+  <div id="insights-screen" class="screen">
+    <h1 class="nav-title">Insights</h1>
+    <p class="section-header">Today</p>
+    <div class="summary-row">
+      <div class="summary-card">
+        <div class="value accent">3</div>
+        <div class="label">Completed</div>
+      </div>
+      <div class="summary-card">
+        <div class="value red">1</div>
+        <div class="label">Overdue</div>
+      </div>
+      <div class="summary-card">
+        <div class="value accent">2</div>
+        <div class="label">Due today</div>
+      </div>
+    </div>
+    <p class="section-header">This week</p>
+    <div class="card">
+      <strong>5 completed</strong>
+      <div class="label">62% completion rate</div>
+    </div>
+    <p class="section-header">Completed per day</p>
+    <div class="chart-placeholder">📊 Bar chart (last 14 days)</div>
+    <p class="section-header">By category</p>
+    <div class="category-row">
+      <span class="name">Work</span>
+      <span class="stats">4/6</span>
+      <span class="pct">67%</span>
+    </div>
+    <div class="category-row">
+      <span class="name">Personal</span>
+      <span class="stats">3/3</span>
+      <span class="pct">100%</span>
+    </div>
+    <div class="category-row">
+      <span class="name">Health</span>
+      <span class="stats">2/4</span>
+      <span class="pct">50%</span>
+    </div>
+  </div>
+
+  <div id="categories-screen" class="screen">
+    <h1 class="nav-title">Categories</h1>
+    <div class="toolbar-right">
+      <button title="Add category">➕</button>
+    </div>
+    <div class="cat-list-item">
+      <div class="icon" style="background: rgba(10,132,255,0.2); color: var(--accent);">📁</div>
+      <span>Work</span>
+      <span class="edit">Edit</span>
+    </div>
+    <div class="cat-list-item">
+      <div class="icon" style="background: rgba(48,209,88,0.2); color: #30d158;">❤️</div>
+      <span>Personal</span>
+      <span class="edit">Edit</span>
+    </div>
+    <div class="cat-list-item">
+      <div class="icon" style="background: rgba(255,159,10,0.2); color: var(--orange);">⭐</div>
+      <span>Health</span>
+      <span class="edit">Edit</span>
+    </div>
+  </div>
+
+  <div id="add-category-screen" class="screen">
+    <h2 class="nav-title" style="font-size: 22px;">New Category</h2>
+    <div class="field">
+      <div class="field-label">Name</div>
+      <input type="text" class="field-input" placeholder="Name" />
+    </div>
+    <div class="field">
+      <div class="field-label">Color</div>
+      <div class="color-dots">
+        <span class="color-dot selected" style="background: #0a84ff;"></span>
+        <span class="color-dot" style="background: #30d158;"></span>
+        <span class="color-dot" style="background: #ff9f0a;"></span>
+        <span class="color-dot" style="background: #ff3b30;"></span>
+        <span class="color-dot" style="background: #af52de;"></span>
+        <span class="color-dot" style="background: #5ac8fa;"></span>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Icon</div>
+      <div class="icon-grid">
+        <span class="icon-cell selected">📁</span>
+        <span class="icon-cell">💼</span>
+        <span class="icon-cell">👤</span>
+        <span class="icon-cell">❤️</span>
+        <span class="icon-cell">⭐</span>
+        <span class="icon-cell">📖</span>
+        <span class="icon-cell">🏠</span>
+        <span class="icon-cell">🏷️</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary">Add</button>
+    </div>
+  </div>
+
+  <div id="settings-screen" class="screen">
+    <h1 class="nav-title">Settings</h1>
+    <p class="section-header">Appearance</p>
+    <div class="settings-group">
+      <div class="settings-row">
+        <span>System</span>
+        <span class="check">✓</span>
+      </div>
+      <div class="settings-row">
+        <span>Light</span>
+      </div>
+      <div class="settings-row">
+        <span>Dark</span>
+      </div>
+    </div>
+    <p class="section-header">About</p>
+    <div class="card">
+      <div class="settings-row">
+        <span style="color: var(--label-secondary);">Version</span>
+        <span>1.0 (1)</span>
+      </div>
+    </div>
+    <p class="about-text">TaskFlow is a simple task and habit tracker. All data stays on your device.</p>
+  </div>
+
+  <!-- FAB (only on Tasks) -->
+  <button class="fab" title="Add task" onclick="showScreen('task-edit-screen')">+</button>
+
+  <!-- Tab bar -->
+  <nav class="tab-bar">
+    <button class="tab active" data-screen="tasks-screen" onclick="showScreen('tasks-screen')">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      Tasks
+    </button>
+    <button class="tab" data-screen="habits-screen" onclick="showScreen('habits-screen')">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+      Habits
+    </button>
+    <button class="tab" data-screen="insights-screen" onclick="showScreen('insights-screen')">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"/></svg>
+      Insights
+    </button>
+    <button class="tab" data-screen="categories-screen" onclick="showScreen('categories-screen')">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+      Categories
+    </button>
+    <button class="tab" data-screen="settings-screen" onclick="showScreen('settings-screen')">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      Settings
+    </button>
+  </nav>
+
+  <script>
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+      var screen = document.getElementById(id);
+      if (screen) screen.classList.add('active');
+      var tab = document.querySelector('.tab[data-screen="' + id + '"]');
+      if (tab) tab.classList.add('active');
+    }
+  </script>
+</body>
+</html>
